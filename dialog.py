@@ -33,7 +33,6 @@ class MapApp(tk.Tk):
     def search_location(self):
         location = self.location_entry.get()
 
-        # Perform the search logic (for example, open a map in a web browser)
         if location:
             map_url = f"https://www.openstreetmap.org/search?query={location}"
             webbrowser.open(map_url)
@@ -51,7 +50,6 @@ class MapApp(tk.Tk):
                 self.show_map(lat, lon)
 
     def show_map(self, lat, lon):
-        # Implement your map display logic here
         pass
 
 
