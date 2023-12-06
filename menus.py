@@ -45,34 +45,30 @@ class FileMenu(tk.Menu):
 class EditMenu(tk.Menu):
     def __init__(self, root, *args, **kwargs):
         tk.Menu.__init__(self, root, *args, **kwargs)
-        self.add_command(label="Undo")
-        self.add_command(label="Redo")
-        self.add_command(label="Add Map Marker")
-        self.add_command(label="Edit Map")
-        self.add_command(label="Upload Map Edit")
+        self.add_command(label="Undo", command=undo)
+        self.add_command(label="Redo", command=redo)
+        self.add_command(label="Add Map Marker", command=add_marker)
 
 class ViewMenu(tk.Menu):
     def __init__(self, root, *args, **kwargs):
         tk.Menu.__init__(self, root, *args, **kwargs)
-        self.add_command(label="Zoom In")
-        self.add_command(label="Zoom Out")
-        self.add_command(label="Layers")
-        self.add_command(label="Compass")
+        self.add_command(label="Zoom In", command=zoom_in)
+        self.add_command(label="Zoom Out", command=zoom_out)
+        self.add_command(label="Compass", command=compass)
 
 class ToolsAndSettingsMenu(tk.Menu):
     def __init__(self, root, *args, **kwargs):
         tk.Menu.__init__(self, root, *args, **kwargs)
-        self.add_command(label="Account Settings")
-        self.add_command(label="Map Settings")
-        self.add_command(label="Language")
-        self.add_command(label="Region")
+        self.add_command(label="Account Settings", command=account_settings)
+        self.add_command(label="Map Settings", command=show_setting)
+        self.add_command(label="Region", command=set_region)
 
 class NavigationMenu(tk.Menu):
     def __init__(self, root, *args, **kwargs):
         tk.Menu.__init__(self, root, *args, **kwargs)
-        self.add_command(label="Search")
-        self.add_command(label="Directions")
-        self.add_command(label="Nearby Places")
+        self.add_command(label="Search", command=search_location)
+        self.add_command(label="Directions", command=get_directions)
+        self.add_command(label="Nearby Places", command=get_nearby)
 
     
 if __name__ == "__main__":
