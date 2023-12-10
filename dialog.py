@@ -1,12 +1,17 @@
 import tkinter as tk
 import webbrowser
+import re
+from tkinter import messagebox
 
 
 class MapApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title('OpenStreetMap')
+        self._create_menus()
+        self._create_widgets()
 
+    def _create_menus(self):
         self.menu_bar = tk.Menu(self)
         self.config(menu=self.menu_bar)
 
@@ -18,6 +23,7 @@ class MapApp(tk.Tk):
         self.view_menu.add_command(label="Show Map by Coordinates", command=self.show_map_by_coordinates_dialog)
         self.menu_bar.add_cascade(label="View", menu=self.view_menu)
 
+    def _create_widgets(self):
         self.label = tk.Label(self, text="Enter Location:")
         self.label.pack()
 
@@ -32,7 +38,6 @@ class MapApp(tk.Tk):
 
     def search_location(self):
         location = self.location_entry.get()
-
         if location:
             map_url = f"https://www.openstreetmap.org/search?query={location}"
             webbrowser.open(map_url)
@@ -42,34 +47,35 @@ class MapApp(tk.Tk):
         self.wait_window(dialog)
 
         if dialog.result:
-            coordinates = dialog.text.split(",")
-            if len(coordinates) == 2:
-                lat, lon = coordinates
-                lat = float(lat.strip())
-                lon = float(lon.strip())
+            try:
+                lat, lon = self._parse_coordinates(dialog.text)
                 self.show_map(lat, lon)
+            except ValueError as e:
+                messagebox.showerror("Error", str(e))
 
     def show_map(self, lat, lon):
+        # Placeholder for map display functionality
+        # This could be a function to update the map_canvas with a map image
+        # For example, using a static map API
         pass
+
+    @staticmethod
+    def _parse_coordinates(coord_str):
+        pattern = r'^\s*([-+]?\d*\.\d+|\d+)\s*,\s*([-+]?\d*\.\d+|\d+)\s*$'
+        match = re.match(pattern, coord_str)
+        if not match:
+            raise ValueError("Invalid coordinate format. Please enter as 'latitude, longitude'.")
+        return float(match.group(1)), float(match.group(2))
 
 
 class CustomDialog(tk.Toplevel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, parent):
+        super().__init__(parent)
         self.title("Enter Coordinates")
 
-        self._result = False
-        self._text = None
-
+        self.result = False
+        self.text = None
         self._add_widgets()
-
-    @property
-    def result(self):
-        return self._result
-
-    @property
-    def text(self):
-        return self._text
 
     def _add_widgets(self):
         label = tk.Label(self, text="Enter Latitude, Longitude (comma-separated):")
@@ -79,22 +85,20 @@ class CustomDialog(tk.Toplevel):
         self.entry.grid(row=1, column=0)
 
         ok_button = tk.Button(self, text="OK", command=self._ok_click)
-        ok_button.grid(row=0, column=1)
+        ok_button.grid(row=2, column=0)
 
         cancel_button = tk.Button(self, text="Cancel", command=self._cancel_click)
-        cancel_button.grid(row=1, column=1)
+        cancel_button.grid(row=2, column=1)
 
         self.bind("<Return>", self._ok_click)
         self.bind("<Escape>", self._cancel_click)
 
     def _cancel_click(self, event=None):
-        self._text = None
-        self._result = False
         self.destroy()
 
     def _ok_click(self, event=None):
-        self._text = self.entry.get()
-        self._result = True
+        self.text = self.entry.get()
+        self.result = True
         self.destroy()
 
 
